@@ -3,7 +3,11 @@
 	"version": "1.0.0",
 	"author": "Ben Booth <hey@benbooth.dev> (https://benbooth.dev)",
 	"license": "MIT",
+	"dependencies": {
+		"lodash-es": "^4.17.21"
+	},
 	"devDependencies": {
+		"@types/lodash-es": "^4.17.12",
 		"@types/node": "^22.10.1",
 		"tsx": "^4.19.2",
 		"typescript": "^5.7.2"
