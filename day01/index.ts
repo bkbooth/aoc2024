@@ -23,14 +23,27 @@ async function main() {
 	listB.sort((a, b) => a - b);
 
 	let totalDistance = 0;
+	let similarityScore = 0;
 	for (let i = 0, n = listA.length; i < n; i++) {
 		const aItem = listA[i];
 		const bItem = listB[i];
+
 		const distance = Math.abs(aItem - bItem);
 		totalDistance += distance;
+
+		let bOccurrences = 0;
+		for (let j = 0, m = n; j < m; j++) {
+			const bItem = listB[j];
+			if (bItem > aItem) continue;
+			if (bItem === aItem) {
+				bOccurrences++;
+			}
+		}
+		similarityScore += aItem * bOccurrences;
 	}
 
 	console.log('Total distance:', totalDistance);
+	console.log('Similarity score:', similarityScore);
 }
 
 main().catch((error) => {
