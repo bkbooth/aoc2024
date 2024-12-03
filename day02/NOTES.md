@@ -10,3 +10,11 @@ testDampenedReportCalls: 754
 safeReports: 246
 safeReportsWithDampening: 318
 ```
+
+Improved:
+
+```
+testReportCalls: 2464
+testDampenedReportCalls: 754
+safeReportsWithDampening: 318
+```
