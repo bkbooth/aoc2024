@@ -4,6 +4,25 @@ import path from 'node:path';
 
 const INPUT_FILE = path.join(__dirname, 'input.txt');
 
+function testReport(report: Array<number>): boolean {
+	let isIncreasing: boolean | null = null;
+	for (let j = 0, m = report.length; j < m - 1; j++) {
+		const level1 = report[j];
+		const level2 = report[j + 1];
+		const difference = level1 - level2;
+		if (difference === 0 || Math.abs(difference) > 3) return false;
+
+		const isIncrease = difference < 0;
+		if (isNil(isIncreasing)) {
+			isIncreasing = isIncrease;
+		} else if (isIncreasing !== isIncrease) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 async function main() {
 	const fileData = await fs.readFile(INPUT_FILE, { encoding: 'utf8' });
 
@@ -15,22 +34,7 @@ async function main() {
 		if (isEmpty(line)) continue;
 
 		const report = line.split(/\s+/).map((level) => Number.parseInt(level));
-		let isIncreasing: boolean | null = null;
-		for (let j = 0, m = report.length; j < m - 1; j++) {
-			const level1 = report[j];
-			const level2 = report[j + 1];
-			const difference = level1 - level2;
-			if (difference === 0 || Math.abs(difference) > 3) break;
-
-			const isIncrease = difference < 0;
-			if (isNil(isIncreasing)) {
-				isIncreasing = isIncrease;
-			} else if (isIncreasing !== isIncrease) {
-				break;
-			}
-
-			if (j === m - 2) safeReports++;
-		}
+		if (testReport(report)) safeReports++;
 	}
 
 	console.log('Safe reports:', safeReports);
