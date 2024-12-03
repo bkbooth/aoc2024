@@ -1,4 +1,4 @@
-import { isEmpty, isNil } from 'lodash-es';
+import { isEmpty } from 'lodash-es';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -22,6 +22,14 @@ function testReport(report: Array<number>): boolean {
 	return true;
 }
 
+function testDampenedReport(report: Array<number>): boolean {
+	const dampenedVariants: Array<Array<number>> = Array.from(
+		{ length: report.length },
+		(_, index) => [...report.slice(0, index), ...report.slice(index + 1)]
+	);
+	return dampenedVariants.some(testReport);
+}
+
 async function main() {
 	const fileData = await fs.readFile(INPUT_FILE, { encoding: 'utf8' });
 
@@ -33,7 +41,7 @@ async function main() {
 		if (isEmpty(line)) continue;
 
 		const report = line.split(/\s+/).map((level) => Number.parseInt(level));
-		if (testReport(report)) safeReports++;
+		if (testReport(report) || testDampenedReport(report)) safeReports++;
 	}
 
 	console.log('Safe reports:', safeReports);
