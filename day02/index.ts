@@ -4,22 +4,26 @@ import path from 'node:path';
 
 const INPUT_FILE = path.join(__dirname, 'input.txt');
 
-function testReport(report: Array<number>): boolean {
+type TestResult = { result: true; level?: number } | { result: false; level: number };
+
+function testReport(report: Array<number>): TestResult {
 	const isIncreasing = report[0] < report[report.length - 1];
 
 	for (let i = 0, n = report.length; i < n - 1; i++) {
 		const level1 = report[i];
 		const level2 = report[i + 1];
 		const difference = level1 - level2;
-		if (difference === 0 || Math.abs(difference) > 3) return false;
+		if (difference === 0 || Math.abs(difference) > 3) {
+			return { result: false, level: i };
+		}
 
 		const isIncrease = difference < 0;
 		if (isIncreasing !== isIncrease) {
-			return false;
+			return { result: false, level: i };
 		}
 	}
 
-	return true;
+	return { result: true };
 }
 
 function testDampenedReport(report: Array<number>): boolean {
@@ -41,6 +45,10 @@ async function main() {
 		if (isEmpty(line)) continue;
 
 		const report = line.split(/\s+/).map((level) => Number.parseInt(level));
+		const { result, level } = testReport(report);
+		if (!result) {
+			// WIP...
+		}
 		if (testReport(report) || testDampenedReport(report)) safeReports++;
 	}
 
