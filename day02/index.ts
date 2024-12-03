@@ -7,9 +7,9 @@ const INPUT_FILE = path.join(__dirname, 'input.txt');
 function testReport(report: Array<number>): boolean {
 	const isIncreasing = report[0] < report[report.length - 1];
 
-	for (let j = 0, m = report.length; j < m - 1; j++) {
-		const level1 = report[j];
-		const level2 = report[j + 1];
+	for (let i = 0, n = report.length; i < n - 1; i++) {
+		const level1 = report[i];
+		const level2 = report[i + 1];
 		const difference = level1 - level2;
 		if (difference === 0 || Math.abs(difference) > 3) return false;
 
@@ -23,10 +23,10 @@ function testReport(report: Array<number>): boolean {
 }
 
 function testDampenedReport(report: Array<number>): boolean {
-	const dampenedVariants: Array<Array<number>> = Array.from(
-		{ length: report.length },
-		(_, index) => [...report.slice(0, index), ...report.slice(index + 1)]
-	);
+	const dampenedVariants: Array<Array<number>> = Array.from({ length: report.length }, (_, i) => [
+		...report.slice(0, i),
+		...report.slice(i + 1),
+	]);
 	return dampenedVariants.some(testReport);
 }
 
