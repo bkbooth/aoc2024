@@ -5,7 +5,8 @@ import path from 'node:path';
 const INPUT_FILE = path.join(__dirname, 'input.txt');
 
 function testReport(report: Array<number>): boolean {
-	let isIncreasing: boolean | null = null;
+	const isIncreasing = report[0] < report[report.length - 1];
+
 	for (let j = 0, m = report.length; j < m - 1; j++) {
 		const level1 = report[j];
 		const level2 = report[j + 1];
@@ -13,9 +14,7 @@ function testReport(report: Array<number>): boolean {
 		if (difference === 0 || Math.abs(difference) > 3) return false;
 
 		const isIncrease = difference < 0;
-		if (isNil(isIncreasing)) {
-			isIncreasing = isIncrease;
-		} else if (isIncreasing !== isIncrease) {
+		if (isIncreasing !== isIncrease) {
 			return false;
 		}
 	}
