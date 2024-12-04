@@ -12,11 +12,11 @@ const INPUT = `
 describe('day02 : testReports', () => {
 	it('returns the number of safe reports', () => {
 		const reports = findReports(INPUT);
-		expect(testReports(reports, false)).toBe(2);
+		expect(testReports(reports, false)).toEqual(2);
 	});
 
 	it('returns the number of safe reports with dampening', () => {
 		const reports = findReports(INPUT);
-		expect(testReports(reports, true)).toBe(4);
+		expect(testReports(reports, true)).toEqual(4);
 	});
 });
