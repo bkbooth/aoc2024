@@ -75,3 +75,39 @@ export function solveWordSearch(wordSearch: WordSearch, wordToFind: string): num
 
 	return appearances;
 }
+
+function checkXmas(wordSearch: WordSearch, location: Coordinate) {
+	const downDiagonal =
+		(wordSearch[location[1] - 1][location[0] - 1] === 'M' &&
+			wordSearch[location[1] + 1][location[0] + 1] === 'S') ||
+		(wordSearch[location[1] - 1][location[0] - 1] === 'S' &&
+			wordSearch[location[1] + 1][location[0] + 1] === 'M');
+
+	const upDiagonal =
+		(wordSearch[location[1] + 1][location[0] - 1] === 'M' &&
+			wordSearch[location[1] - 1][location[0] + 1] === 'S') ||
+		(wordSearch[location[1] + 1][location[0] - 1] === 'S' &&
+			wordSearch[location[1] - 1][location[0] + 1] === 'M');
+
+	return downDiagonal && upDiagonal;
+}
+
+export function solveXmasPuzzle(wordSearch: WordSearch): number {
+	let startingLocations: Array<Coordinate> = [];
+	for (let y = 1, n = wordSearch.length - 1; y < n; y++) {
+		for (let x = 1, m = wordSearch[y].length - 1; x < m; x++) {
+			if (wordSearch[y][x] === 'A') {
+				startingLocations.push([x, y]);
+			}
+		}
+	}
+
+	let appearances = 0;
+
+	for (let i = 0, n = startingLocations.length; i < n; i++) {
+		const location = startingLocations[i];
+		if (checkXmas(wordSearch, location)) appearances++;
+	}
+
+	return appearances;
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildWordSearch, solveWordSearch } from './wordSearch';
+import { buildWordSearch, solveWordSearch, solveXmasPuzzle } from './wordSearch';
 
 const TEST_WORD_SEARCH = `
 	MMMSXXMASM
@@ -18,5 +18,10 @@ describe('day04 : wordSearch', () => {
 	it('finds all appearances of a given word in a word search', () => {
 		const wordSearch = buildWordSearch(TEST_WORD_SEARCH);
 		expect(solveWordSearch(wordSearch, WORD_TO_FIND)).toEqual(18);
+	});
+
+	it('finds all appearances of X-MAS within a word search', () => {
+		const wordSearch = buildWordSearch(TEST_WORD_SEARCH);
+		expect(solveXmasPuzzle(wordSearch)).toEqual(9);
 	});
 });
