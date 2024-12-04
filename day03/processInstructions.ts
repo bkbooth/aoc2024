@@ -1,13 +1,15 @@
 const DO_INSTRUCTION = /do\(\)/;
 const DONT_INSTRUCTION = /don\'t\(\)/;
 const MUL_INSTRUCTION = /mul\((\d{1,3}),(\d{1,3})\)/;
-const ALL_INSTRUCTIONS = new RegExp(
-	DO_INSTRUCTION.source + '|' + DONT_INSTRUCTION.source + '|' + MUL_INSTRUCTION.source,
-	'gm'
-);
 
-export function findInstructions(input: string): Array<string> {
-	return input.match(ALL_INSTRUCTIONS);
+export function findInstructions(input: string, useConditionals = true): Array<string> {
+	const allInstructions = new RegExp(
+		useConditionals
+			? DO_INSTRUCTION.source + '|' + DONT_INSTRUCTION.source + '|' + MUL_INSTRUCTION.source
+			: MUL_INSTRUCTION,
+		'gm'
+	);
+	return input.match(allInstructions);
 }
 
 let instructionsEnabled = true;

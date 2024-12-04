@@ -7,7 +7,7 @@ const INPUT_FILE = path.join(__dirname, 'input.txt');
 async function main() {
 	const fileData = await fs.readFile(INPUT_FILE, { encoding: 'utf8' });
 
-	const instructions = findInstructions(fileData);
+	const instructions = findInstructions(fileData, true);
 	const total = processInstructions(instructions);
 
 	console.log('Multiplications total:', total);
