@@ -34,7 +34,7 @@ Only the _most recent_ `do()` or `don't()` instruction applies. At the beginning
 For example:
 
 ```
-xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))`
+xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))
 ```
 
 This corrupted memory is similar to the example from before, but this time the `mul(5,5)` and `mul(11,8)` instructions are _disabled_ because there is a `don't()` instruction before them. The other `mul` instructions function normally, including the one at the end that gets re-_enabled_ by a `do()` instruction.
