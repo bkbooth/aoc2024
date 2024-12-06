@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+	arrangePages,
 	calculateMiddlePageSums,
 	isArranged,
 	parseSortingRules,
@@ -42,5 +43,13 @@ describe('day05 : arrangePages', () => {
 		const updates = parseUpdates(INPUT);
 		const arrangedUpdates = updates.filter((update) => isArranged(update, sortingRules));
 		expect(calculateMiddlePageSums(arrangedUpdates)).toEqual(143);
+	});
+
+	it('calculates the sum of the middle pages of re-arranged updates', () => {
+		const sortingRules = parseSortingRules(INPUT);
+		const updates = parseUpdates(INPUT);
+		const incorrectUpdates = updates.filter((update) => !isArranged(update, sortingRules));
+		const arrangedUpdates = arrangePages(incorrectUpdates, sortingRules);
+		expect(calculateMiddlePageSums(arrangedUpdates)).toEqual(123);
 	});
 });

@@ -1,3 +1,5 @@
+import { partial } from 'lodash-es';
+
 export type SortingRule = [number, number];
 export type Update = Array<number>;
 
@@ -30,6 +32,28 @@ export function isArranged(update: Update, sortingRules: Array<SortingRule>): bo
 		}
 	}
 	return true;
+}
+
+function sortBySortingRules(
+	sortingRules: Array<SortingRule>,
+	page1: number,
+	page2: number
+): number {
+	const rule = sortingRules.find(
+		(rule) => (page1 === rule[0] && page2 === rule[1]) || (page1 === rule[1] && page2 === rule[0])
+	);
+	if (rule && page1 === rule[1] && page2 === rule[0]) {
+		return -1;
+	} else {
+		return 0;
+	}
+}
+
+export function arrangePages(
+	updates: Array<Update>,
+	sortingRules: Array<SortingRule>
+): Array<Update> {
+	return updates.map((update) => update.sort(partial(sortBySortingRules, sortingRules)));
 }
 
 export function calculateMiddlePageSums(updates: Array<Update>): number {

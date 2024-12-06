@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {
+	arrangePages,
 	calculateMiddlePageSums,
 	isArranged,
 	parseSortingRules,
@@ -14,10 +15,16 @@ async function main() {
 
 	const sortingRules = parseSortingRules(fileData);
 	const updates = parseUpdates(fileData);
-	const arrangedUpdates = updates.filter((update) => isArranged(update, sortingRules));
-	const middlePageSums = calculateMiddlePageSums(arrangedUpdates);
 
-	console.log('Arranged middle page sums:', middlePageSums);
+	const arrangedUpdates = updates.filter((update) => isArranged(update, sortingRules));
+	const arrangedMiddlePageSums = calculateMiddlePageSums(arrangedUpdates);
+
+	const incorrectUpdates = updates.filter((update) => !isArranged(update, sortingRules));
+	const reArrangedUpdates = arrangePages(incorrectUpdates, sortingRules);
+	const reArrangedMiddlePageSums = calculateMiddlePageSums(reArrangedUpdates);
+
+	console.log('Arranged middle page sums:', arrangedMiddlePageSums);
+	console.log('Re-arranged middle page sums:', reArrangedMiddlePageSums);
 }
 
 main().catch((error) => {
