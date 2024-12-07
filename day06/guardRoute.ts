@@ -27,13 +27,24 @@ function findGuardStartPosition(map: AreaMap): Coordinate {
 	}
 }
 
-export function calculateGuardUniquePositions(map: AreaMap): number {
+export function findGuardUniquePositions(map: AreaMap): Map<string, string> {
 	let directionIndex = 0;
-	let guardPath = new Map<string, Coordinate>();
+	let guardPath = new Map<string, string>();
 
 	let [x, y] = findGuardStartPosition(map);
 	while (x >= 0 && x < map.length && y >= 0 && y < map[0].length) {
-		guardPath.set(`${x},${y}`, [x, y]);
+		const position = `${x},${y}`;
+		const existingDirections = guardPath.get(position);
+		let updatedDirections = existingDirections;
+		if (!updatedDirections) {
+			updatedDirections = directionIndex.toString();
+		} else if (!existingDirections.includes(directionIndex.toString())) {
+			updatedDirections += directionIndex.toString();
+		} else {
+			// If the guard has already visited this position in the same direction then they are in a loop
+			throw new Error('Invalid path, guard loops');
+		}
+		guardPath.set(position, updatedDirections);
 
 		const direction = DIRECTIONS[directionIndex];
 		const newX = x + direction[0];
@@ -49,5 +60,31 @@ export function calculateGuardUniquePositions(map: AreaMap): number {
 		}
 	}
 
-	return guardPath.size;
+	return guardPath;
+}
+
+export function findGuardObstructionPositions(map: AreaMap): Array<Coordinate> {
+	const possibleObstructionPositions = findGuardUniquePositions(map);
+	let [startX, startY] = findGuardStartPosition(map);
+	possibleObstructionPositions.delete(`${startX},${startY}`);
+
+	let obstructionPositions: Array<Coordinate> = [];
+	for (const [key] of possibleObstructionPositions) {
+		const keyCoordinates = key.split(',');
+		const x = Number.parseInt(keyCoordinates[0]);
+		const y = Number.parseInt(keyCoordinates[1]);
+		// Temporarily add obstruction to map
+		map[y][x] = '#';
+		try {
+			findGuardUniquePositions(map);
+		} catch (error) {
+			// Map update caused a guard loop
+			obstructionPositions.push([x, y]);
+		} finally {
+			// Revert map change
+			map[y][x] = '.';
+		}
+	}
+
+	return obstructionPositions;
 }
