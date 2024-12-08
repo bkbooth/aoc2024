@@ -8,7 +8,7 @@ async function main() {
 	const fileData = await fs.readFile(INPUT_FILE, { encoding: 'utf8' });
 
 	const allEquations = parseEquations(fileData);
-	const calibrationResult = calculateCalibrationResult(allEquations);
+	const calibrationResult = calculateCalibrationResult(allEquations, true);
 
 	console.log('Calibration result:', calibrationResult);
 }

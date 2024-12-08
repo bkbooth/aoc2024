@@ -15,6 +15,11 @@ const INPUT = `
 describe('day07 : solveEquations', () => {
 	it('finds the number of solvable equations', () => {
 		const allEquations = parseEquations(INPUT);
-		expect(calculateCalibrationResult(allEquations)).toEqual(3749);
+		expect(calculateCalibrationResult(allEquations, false)).toEqual(3749);
+	});
+
+	it('finds the number of solvable equations with extra operator', () => {
+		const allEquations = parseEquations(INPUT);
+		expect(calculateCalibrationResult(allEquations, true)).toEqual(11387);
 	});
 });
