@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { buildMap, findUniqueAntinodes } from './findAntinodes';
+import { buildMap, findUniqueAntinodes, findUniqueResonantAntinodes } from './findAntinodes';
 
 const INPUT_FILE = path.join(__dirname, 'input.txt');
 
@@ -10,6 +10,9 @@ async function main() {
 
 	const uniqueAntinodes = findUniqueAntinodes(map);
 	console.log('Unique antinode positions:', uniqueAntinodes.length);
+
+	const uniqueResonantAntinodes = findUniqueResonantAntinodes(map);
+	console.log('Unique resonant antinode positions:', uniqueResonantAntinodes.length);
 }
 
 main().catch((error) => {
