@@ -25,20 +25,93 @@ export function buildFileSystem(diskMap: string): FileSystem {
 	return fileSystem;
 }
 
-export function compactFileSystem(fileSystem: FileSystem): FileSystem {
+function compactFileSystemWithFragmentation(fileSystem: FileSystem): FileSystem {
 	let i = fileSystem.length;
 	while (i > 0) {
 		const firstFreeSpace = fileSystem.findIndex(Number.isNaN);
 		if (firstFreeSpace >= i) return fileSystem;
 
 		const block = fileSystem[--i];
-		if (isNaN(block)) continue;
+		if (Number.isNaN(block)) continue;
 
 		fileSystem[firstFreeSpace] = block;
 		fileSystem[i] = NaN;
 	}
 
 	return fileSystem;
+}
+
+function moveFile(fileSystem: FileSystem, fileId, fileStart, fileLength): FileSystem {
+	let freeSpaceStart = -1;
+	let freeSpaceLength = -1;
+	for (let i = 0, n = fileStart; i < n; i++) {
+		const block = fileSystem[i];
+		if (Number.isNaN(block)) {
+			if (freeSpaceStart >= 0) {
+				// More free space
+				freeSpaceLength++;
+			} else {
+				// Starting a new free space block
+				freeSpaceStart = i;
+				freeSpaceLength = 1;
+			}
+
+			if (freeSpaceLength === fileLength) {
+				// Move the file here and return
+				for (let j = 0, m = fileLength; j < m; j++) {
+					fileSystem[freeSpaceStart + j] = fileId;
+					fileSystem[fileStart + j] = NaN;
+				}
+				return fileSystem;
+			}
+		} else {
+			// Currently occupied space
+			freeSpaceStart = -1;
+			freeSpaceLength = -1;
+		}
+	}
+	return fileSystem;
+}
+
+function compactFileSystemWithoutFragmentation(fileSystem: FileSystem): FileSystem {
+	let i = fileSystem.length;
+	let fileId = -1;
+	let fileStart = -1;
+	let fileLength = -1;
+	while (i > 0) {
+		const block = fileSystem[--i];
+		if (block !== fileId) {
+			if (fileId >= 0) {
+				// We've found all of the file, attempt to move it
+				fileSystem = moveFile(fileSystem, fileId, fileStart, fileLength);
+			}
+			if (!Number.isNaN(block)) {
+				// It's a new file, but we can ignore if it's the first file
+				if (fileId === 0) return fileSystem;
+
+				fileId = block;
+				fileStart = i;
+				fileLength = 1;
+			} else {
+				// It's free space, reset file counters
+				fileId = fileStart = fileLength = -1;
+			}
+		} else {
+			// Increment current file
+			fileStart = i;
+			fileLength++;
+		}
+	}
+
+	return fileSystem;
+}
+
+export function compactFileSystem(fileSystem: FileSystem, preventFragmenting = true): FileSystem {
+	if (preventFragmenting) {
+		return compactFileSystemWithoutFragmentation(fileSystem);
+	} else {
+		return compactFileSystemWithFragmentation(fileSystem);
+	}
 }
 
 export function calculateChecksum(fileSystem: FileSystem): number {

@@ -14,10 +14,14 @@ async function main() {
 
 	const diskMap = parseDiskMap(fileData);
 	const fileSystem = buildFileSystem(diskMap);
-	const compactedFileSystem = compactFileSystem(fileSystem);
-	const checksum = calculateChecksum(compactedFileSystem);
 
-	console.log('Compacted filesystem checksum:', checksum);
+	// const compactedFileSystem1 = compactFileSystem([...fileSystem], false);
+	// const checksum1 = calculateChecksum(compactedFileSystem1);
+	// console.log('Compacted filesystem (fragmented) checksum:', checksum1);
+
+	const compactedFileSystem2 = compactFileSystem(fileSystem, true);
+	const checksum2 = calculateChecksum(compactedFileSystem2);
+	console.log('Compacted filesystem (not-fragmented) checksum:', checksum2);
 }
 
 main().catch((error) => {
