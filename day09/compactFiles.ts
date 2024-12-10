@@ -78,12 +78,14 @@ function compactFileSystemWithoutFragmentation(fileSystem: FileSystem): FileSyst
 	let fileId = -1;
 	let fileStart = -1;
 	let fileLength = -1;
+	let movedFiles: Array<number> = [];
 	while (i > 0) {
 		const block = fileSystem[--i];
 		if (block !== fileId) {
-			if (fileId >= 0) {
+			if (fileId >= 0 && !movedFiles.includes(fileId)) {
 				// We've found all of the file, attempt to move it
 				fileSystem = moveFile(fileSystem, fileId, fileStart, fileLength);
+				movedFiles.push(fileId);
 			}
 			if (!Number.isNaN(block)) {
 				// It's a new file, but we can ignore if it's the first file

@@ -18,7 +18,11 @@ describe('day09 : compactFiles', () => {
 
 	it.each([
 		{ input: INPUT, expected: 2858 },
+		{ input: `673253833464635054191677274350925861527651788483`, expected: 149706 },
+		{ input: `22222228282828222222282829212324252627282920`, expected: 9447 },
+		{ input: `23222120202525282820202020272722212121`, expected: 7705 },
 		{ input: `2333133121414131499`, expected: 6204 },
+		{ input: `48274728818`, expected: 1752 },
 		{ input: `714892711`, expected: 813 },
 		{ input: `12101`, expected: 4 },
 		{ input: `1313165`, expected: 169 },
