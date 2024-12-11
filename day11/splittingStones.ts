@@ -1,4 +1,5 @@
 export type StonesList = Array<number>;
+export type StonesDict = Map<number, number>;
 
 export function parseInitialStones(input: string): StonesList {
 	return input
@@ -11,7 +12,7 @@ export function parseInitialStones(input: string): StonesList {
 export function calculateMoves(stones: StonesList, moves: number): StonesList {
 	let updatedStones: StonesList = [...stones];
 	for (let i = 0, n = moves; i < n; i++) {
-		for (let j = 0; j < updatedStones.length; j++) {
+		for (let j = 0, m = updatedStones.length; j < m; j++) {
 			const stone = updatedStones[j];
 			const stoneString = String(stone);
 
@@ -25,8 +26,8 @@ export function calculateMoves(stones: StonesList, moves: number): StonesList {
 				const middle = stoneString.length / 2;
 				const left = stoneString.slice(0, middle);
 				const right = stoneString.slice(middle);
-				updatedStones.splice(j, 1, Number.parseInt(left), Number.parseInt(right));
-				j++;
+				updatedStones[j] = Number.parseInt(left);
+				updatedStones.push(Number.parseInt(right));
 			}
 
 			// Rule 3
@@ -36,4 +37,47 @@ export function calculateMoves(stones: StonesList, moves: number): StonesList {
 		}
 	}
 	return updatedStones;
+}
+
+export function calculateNumberOfStones(stones: StonesList, moves: number): number {
+	let stonesCounts = stones.reduce((stonesCounts, stone) => {
+		const count = stonesCounts.get(stone);
+		stonesCounts.set(stone, count ? count + 1 : 1);
+		return stonesCounts;
+	}, new Map<number, number>());
+
+	for (let i = 0, n = moves; i < n; i++) {
+		let nextStonesCounts = new Map<number, number>();
+		for (let [stone, count] of stonesCounts) {
+			const stoneString = String(stone);
+			let results: Array<number> = [];
+
+			// Rule 1
+			if (stone === 0) {
+				results.push(1);
+			}
+
+			// Rule 2
+			else if (stoneString.length % 2 === 0) {
+				const middle = stoneString.length / 2;
+				const left = stoneString.slice(0, middle);
+				const right = stoneString.slice(middle);
+				results.push(Number.parseInt(left), Number.parseInt(right));
+			}
+
+			// Rule 3
+			else {
+				results.push(stone * 2024);
+			}
+
+			results.forEach((result) => {
+				const existingCount = nextStonesCounts.get(result);
+				nextStonesCounts.set(result, existingCount ? existingCount + count : count);
+			});
+		}
+
+		stonesCounts = nextStonesCounts;
+	}
+
+	return [...stonesCounts.values()].reduce((sum, values) => sum + values, 0);
 }
