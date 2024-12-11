@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash-es';
+import { isEmpty, uniq } from 'lodash-es';
 
 export type TopographicMap = Array<Array<number>>;
 export type Coordinate = [x: number, y: number];
@@ -53,24 +53,32 @@ export function findAllHikingTrails(topographicMap: TopographicMap): Trailheads 
 		trails = continuedTrails;
 	}
 
-	const uniqueTrails = new Map<string, Array<string>>();
+	const allTrails = new Map<string, Array<string>>();
 	for (let i = 0, n = trails.length; i < n; i++) {
 		const { start, end } = trails[i];
 		const startId = `${start[0]},${start[1]}`;
 		const endId = `${end[0]},${end[1]}`;
-		const trailEnds = uniqueTrails.get(startId);
+		const trailEnds = allTrails.get(startId);
 		if (!trailEnds) {
-			uniqueTrails.set(startId, [endId]);
-		} else if (!trailEnds.includes(endId)) {
+			allTrails.set(startId, [endId]);
+		} else {
 			trailEnds.push(endId);
-			uniqueTrails.set(startId, trailEnds);
+			allTrails.set(startId, trailEnds);
 		}
 	}
 
-	return uniqueTrails;
+	return allTrails;
 }
 
 export function sumTrailheadScores(trailheads: Trailheads): number {
+	let sum = 0;
+	for (let trailheadPaths of trailheads.values()) {
+		sum += uniq(trailheadPaths).length;
+	}
+	return sum;
+}
+
+export function sumTrailheadRatings(trailheads: Trailheads): number {
 	let sum = 0;
 	for (let trailheadPaths of trailheads.values()) {
 		sum += trailheadPaths.length;

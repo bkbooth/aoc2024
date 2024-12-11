@@ -1,6 +1,11 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { buildTopographicMap, findAllHikingTrails, sumTrailheadScores } from './hikingTrails';
+import {
+	buildTopographicMap,
+	findAllHikingTrails,
+	sumTrailheadRatings,
+	sumTrailheadScores,
+} from './hikingTrails';
 
 const INPUT_FILE = path.join(__dirname, 'input.txt');
 
@@ -9,9 +14,12 @@ async function main() {
 
 	const topographicMap = buildTopographicMap(fileData);
 	const hikingTrails = findAllHikingTrails(topographicMap);
-	const trailheadsScores = sumTrailheadScores(hikingTrails);
 
+	const trailheadsScores = sumTrailheadScores(hikingTrails);
 	console.log('Sum of trailhead scores:', trailheadsScores);
+
+	const trailheadsRatings = sumTrailheadRatings(hikingTrails);
+	console.log('Sum of trailhead ratings:', trailheadsRatings);
 }
 
 main().catch((error) => {

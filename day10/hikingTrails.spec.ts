@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { buildTopographicMap, findAllHikingTrails, sumTrailheadScores } from './hikingTrails';
+import {
+	buildTopographicMap,
+	findAllHikingTrails,
+	sumTrailheadRatings,
+	sumTrailheadScores,
+} from './hikingTrails';
 
 const INPUT = `
 	89010123
@@ -16,5 +21,11 @@ describe('day10 : hikingTrails', () => {
 		const topographicMap = buildTopographicMap(INPUT);
 		const hikingTrails = findAllHikingTrails(topographicMap);
 		expect(sumTrailheadScores(hikingTrails)).toEqual(36);
+	});
+
+	it('calculates the sum of the ratings of all trailheads in a map', () => {
+		const topographicMap = buildTopographicMap(INPUT);
+		const hikingTrails = findAllHikingTrails(topographicMap);
+		expect(sumTrailheadRatings(hikingTrails)).toEqual(81);
 	});
 });
