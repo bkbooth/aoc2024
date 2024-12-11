@@ -6,10 +6,10 @@ export type Antennas = Map<string, Array<Coordinate>>;
 
 export function buildMap(input: string): AreaMap {
 	const rows = input.split('\n');
-	return rows.reduce((wordSearch, row) => {
-		if (isEmpty(row.trim())) return wordSearch;
-		wordSearch.push(row.trim().split(''));
-		return wordSearch;
+	return rows.reduce((areaMap, row) => {
+		if (isEmpty(row.trim())) return areaMap;
+		areaMap.push(row.trim().split(''));
+		return areaMap;
 	}, [] as AreaMap);
 }
 
