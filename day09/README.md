@@ -1,4 +1,4 @@
-[Day 9: Disk Fragmenter](https://adventofcode.com/2024/day/9)
+# [Day 9: Disk Fragmenter](https://adventofcode.com/2024/day/9)
 
 Another push of the button leaves you in the familiar hallways of some friendly [amphipods](https://adventofcode.com/2021/day/23)! Good thing you each somehow got your own personal mini submarine. The Historians jet away in search of the Chief, mostly by driving directly into walls.
 
