@@ -46,28 +46,35 @@ export function calculateNumberOfStones(stones: StonesList, moves: number): numb
 		return stonesCounts;
 	}, new Map<number, number>());
 
+	// Cache known stones results values, mostly valuable for rule 2's
+	let knownResults = new Map<number, Array<number>>();
+
 	for (let i = 0, n = moves; i < n; i++) {
 		let nextStonesCounts = new Map<number, number>();
 		for (let [stone, count] of stonesCounts) {
-			const stoneString = String(stone);
-			let results: Array<number> = [];
+			let results = knownResults.get(stone) ?? [];
+			if (!results.length) {
+				const stoneString = String(stone);
 
-			// Rule 1
-			if (stone === 0) {
-				results.push(1);
-			}
+				// Rule 1
+				if (stone === 0) {
+					results.push(1);
+				}
 
-			// Rule 2
-			else if (stoneString.length % 2 === 0) {
-				const middle = stoneString.length / 2;
-				const left = stoneString.slice(0, middle);
-				const right = stoneString.slice(middle);
-				results.push(Number.parseInt(left), Number.parseInt(right));
-			}
+				// Rule 2
+				else if (stoneString.length % 2 === 0) {
+					const middle = stoneString.length / 2;
+					const left = stoneString.slice(0, middle);
+					const right = stoneString.slice(middle);
+					results.push(Number.parseInt(left), Number.parseInt(right));
+				}
 
-			// Rule 3
-			else {
-				results.push(stone * 2024);
+				// Rule 3
+				else {
+					results.push(stone * 2024);
+				}
+
+				knownResults.set(stone, results);
 			}
 
 			results.forEach((result) => {
