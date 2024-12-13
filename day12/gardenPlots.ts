@@ -29,8 +29,6 @@ export function buildGardenMap(input: string): GardenMap {
 function walkRegion(map: GardenMap, initialPlot: Coordinate, mapped: Array<string>): GardenRegion {
 	const plotType = map[initialPlot[1]][initialPlot[0]];
 	let area = 0;
-	let perimeter = 0;
-	let sides = 0;
 	let regionEdges: Array<Coordinate> = [];
 	let pendingPlots: Array<Coordinate> = [initialPlot];
 	while (pendingPlots.length) {
@@ -38,8 +36,8 @@ function walkRegion(map: GardenMap, initialPlot: Coordinate, mapped: Array<strin
 
 		for (let i = 0, n = DIRECTIONS.length; i < n; i++) {
 			const [xOffset, yOffset] = DIRECTIONS[i];
-			const xEdge = xOffset * 0.5;
-			const yEdge = yOffset * 0.5;
+			const xEdge = xOffset * 0.1;
+			const yEdge = yOffset * 0.1;
 			const adjacentX = x + xOffset;
 			const adjacentY = y + yOffset;
 			if (map[adjacentY]?.[adjacentX] === plotType) {
@@ -52,38 +50,60 @@ function walkRegion(map: GardenMap, initialPlot: Coordinate, mapped: Array<strin
 					pendingPlots.push([adjacentX, adjacentY]);
 				}
 			} else {
-				if (
-					// top side exists
-					(yOffset === -1 &&
-						!regionEdges.some(
-							([reX, reY]) => reY === y + yEdge && (reX === x - 1 || reX === x + 1)
-						)) ||
-					// bottom side exists
-					(yOffset === 1 &&
-						!regionEdges.some(
-							([reX, reY]) => reY === y + yEdge && (reX === x - 1 || reX === x + 1)
-						)) ||
-					// left side exists
-					(xOffset === -1 &&
-						!regionEdges.some(
-							([reX, reY]) => reX === x + xEdge && (reY === y - 1 || reY === y + 1)
-						)) ||
-					// right side exists
-					(xOffset === 1 &&
-						!regionEdges.some(
-							([reX, reY]) => reX === x + xEdge && (reY === y - 1 || reY === y + 1)
-						))
-				) {
-					sides++;
-				}
-
 				regionEdges.push([x + xEdge, y + yEdge]);
-				perimeter++;
 			}
 		}
 
 		mapped.push(`${x},${y}`);
 		area++;
+	}
+
+	const perimeter = regionEdges.length;
+
+	let sides = 0;
+	while (regionEdges.length) {
+		const [edgeX, edgeY] = regionEdges.shift();
+		sides++;
+		const isHorizontal = edgeY % 1 !== 0;
+		if (isHorizontal) {
+			let leftX = edgeX;
+			let leftIndex = -1;
+			do {
+				leftX--;
+				leftIndex = regionEdges.findIndex(([reX, reY]) => reX === leftX && reY === edgeY);
+				if (leftIndex >= 0) {
+					regionEdges.splice(leftIndex, 1);
+				}
+			} while (leftIndex >= 0);
+			let rightX = edgeX;
+			let rightIndex = -1;
+			do {
+				rightX++;
+				rightIndex = regionEdges.findIndex(([reX, reY]) => reX === rightX && reY === edgeY);
+				if (rightIndex >= 0) {
+					regionEdges.splice(rightIndex, 1);
+				}
+			} while (rightIndex >= 0);
+		} else {
+			let topY = edgeY;
+			let topIndex = -1;
+			do {
+				topY--;
+				topIndex = regionEdges.findIndex(([reX, reY]) => reX === edgeX && reY === topY);
+				if (topIndex >= 0) {
+					regionEdges.splice(topIndex, 1);
+				}
+			} while (topIndex >= 0);
+			let bottomY = edgeY;
+			let bottomIndex = -1;
+			do {
+				bottomY++;
+				bottomIndex = regionEdges.findIndex(([reX, reY]) => reX === edgeX && reY === bottomY);
+				if (bottomIndex >= 0) {
+					regionEdges.splice(bottomIndex, 1);
+				}
+			} while (bottomIndex >= 0);
+		}
 	}
 
 	return { type: plotType, area, perimeter, sides };
