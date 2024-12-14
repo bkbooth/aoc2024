@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
 		// Allow all new JS/TS niceties
-		"target": "es6",
+		"target": "esnext",
 
 		// Treat files as modules even if it doesn't use import/export
 		"moduleDetection": "force",
