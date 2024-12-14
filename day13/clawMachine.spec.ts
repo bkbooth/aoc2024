@@ -20,7 +20,12 @@ const INPUT = `
 
 describe('day13 : clawMachine', () => {
 	it('calculates the fewest tokens to win all prizes', () => {
-		const clawMachines = parseClawMachines(INPUT);
+		const clawMachines = parseClawMachines(INPUT, false);
 		expect(calculateFewestTokens(clawMachines)).toEqual(480);
+	});
+
+	it('calculates the fewest tokens to win all prizes with prize offsets', () => {
+		const clawMachines = parseClawMachines(INPUT, true);
+		expect(calculateFewestTokens(clawMachines)).toEqual(875318608908);
 	});
 });
